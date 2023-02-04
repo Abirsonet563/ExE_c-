@@ -1,0 +1,45 @@
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <vector>
+#include <algorithm>
+#include <map>
+
+struct Record {
+    int id;
+    std::string name;
+    int age;
+    char gender;
+};
+
+int main() {
+    std::vector<Record> records;
+    std::ifstream file("first.csv");
+    std::string line;
+
+    while (std::getline(file, line)) {
+        Record record;
+        std::sscanf(line.c_str(), "%d,%[^,],%d,%c", &record.id, &record.name[0], &record.age, &record.gender);
+        records.push_back(record);
+    }
+
+    std::map<int, Record> record_map;
+    for (const auto &record : records) {
+        record_map[record.id] = record;
+    }
+
+    int targetID;
+    std::cout << "Enter ID number: ";
+    std::cin >> targetID;
+
+    auto result = record_map.find(targetID);
+    if (result == record_map.end()) {
+        std::cout << "ID not found." << std::endl;
+    } else {
+        std::cout << "Name: " << result->second.name << std::endl;
+        std::cout << "Age: " << result->second.age << std::endl;
+        std::cout << "Gender: " << result->second.gender << std::endl;
+    }
+
+    return 0;
+}
